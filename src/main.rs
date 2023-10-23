@@ -3,7 +3,9 @@ mod modules;
 
 use crate::commands::user_commands::*;
 use crate::commands::admin_commands::*;
+
 use modules::channel_message_logger::log_message;
+
 
 use serde::{Deserialize, Serialize};
 
@@ -22,6 +24,8 @@ use serenity::model::gateway::Ready;
 use serenity::prelude::*;
 use serenity::model::channel::Message;
 use tracing::error;
+
+
 
 
 pub struct ShardManagerContainer;
@@ -76,6 +80,7 @@ async fn main() {
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::DIRECT_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
+
     let mut client = Client::builder(&token, intents)
         .framework(framework)
         .event_handler(Handler)
@@ -106,10 +111,10 @@ struct Config {
 }
 
 fn get_token_from_json() -> String{
-    let mut file = File::open("./src/keys.json").expect("Unable to open config file");
+    let mut file = File::open("config/keys.json").expect("Unable to find keys.json");
     let mut contents = String::new();
-    file.read_to_string(&mut contents).expect("Unable to read config file");
-    let config: Config = serde_json::from_str(&contents).expect("Unable to parse config JSON");
+    file.read_to_string(&mut contents).expect("Unable to read keys.json");
+    let config: Config = serde_json::from_str(&contents).expect("Unable to parse keys.json");
 
     let token = config.discord_api_key;
     return token;

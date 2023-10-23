@@ -3,12 +3,17 @@ use serde_json::Value;
 use serenity::builder::CreateEmbedAuthor;
 use serenity::client::Context;
 use serenity::model::channel::Message;
+use serenity::model::prelude::ChannelId;
 use serenity::utils::Colour;
 
 
-pub async fn log_message(ctx: &Context, msg: &Message) {
-    if !msg.author.bot {
 
+
+pub async fn log_message(ctx: &Context, msg: &Message){
+    if msg.author.bot {
+        return;
+    }
+        let log_channel_id: ChannelId = ChannelId(967685973456609320);
         let hash_author = HashMap::from([
             ("icon_url", Value::String(msg.author.avatar_url().unwrap_or_default())),
             ("name", Value::String(msg.author.name.to_string())),
@@ -25,8 +30,7 @@ pub async fn log_message(ctx: &Context, msg: &Message) {
         let message_channel_link: String = format!("{}",message_channel_name);
         let formatted_description: String = format!("** Message sent in ** {}\n{}\n{}",message_channel_link,message_link,message_content);
 
-        let _msg = msg
-                .channel_id
+        let _msg = log_channel_id
                 .send_message(&ctx.http, |m| {
                     m
                         .embed(|e| {
@@ -40,8 +44,9 @@ pub async fn log_message(ctx: &Context, msg: &Message) {
                 })
                 .await;
 
-}
-}
+            }
+
+
 
 
 
