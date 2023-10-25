@@ -1,4 +1,3 @@
 /target
 Cargo.lock
-config/keys.json
-config/keys_testing.json
+config/key.json

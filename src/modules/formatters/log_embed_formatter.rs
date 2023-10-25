@@ -32,7 +32,7 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed{
         .footer(|footer| footer.text("User ID: ".to_string() + &msg.author.id.to_string() ))
         .timestamp(msg.timestamp);
 
-    embed
+        embed
 
 
     }

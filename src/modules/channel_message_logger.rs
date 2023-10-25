@@ -13,11 +13,10 @@ pub async fn channel_message_logger(ctx: &Context, msg: &Message){
 
         let embed: CreateEmbed = log_embed_formatter(ctx, msg).await;
 
-        let _msg = log_channel_id
+        let _send_message = log_channel_id
                 .send_message(&ctx.http, |message| 
-                    {message.set_embed(embed)})
+                    message.set_embed(embed))
                 .await;
-
             }
 
 
