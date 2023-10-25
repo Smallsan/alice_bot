@@ -4,7 +4,8 @@ mod modules;
 use crate::commands::user_commands::*;
 use crate::commands::admin_commands::*;
 
-use modules::channel_message_logger::log_message;
+use modules::channel_message_logger::channel_message_logger;
+use modules::message_stalker::message_stalker;
 
 
 use serde::{Deserialize, Serialize};
@@ -50,8 +51,10 @@ impl EventHandler for Handler {
     }
     
     async fn message(&self, ctx: Context, msg: Message) {
-        log_message(&ctx, &msg).await;
+        channel_message_logger(&ctx, &msg).await;
+        message_stalker(&ctx, &msg).await;
         }
+        
     }
 
 
