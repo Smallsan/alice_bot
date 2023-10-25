@@ -114,7 +114,7 @@ struct Config {
 }
 
 fn get_token_from_json() -> String{
-    let mut file = File::open("config/key.json").expect("Unable to find keys.json");
+    let mut file = File::open("config/keys.json").expect("Unable to find keys.json");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Unable to read keys.json");
     let config: Config = serde_json::from_str(&contents).expect("Unable to parse keys.json");
