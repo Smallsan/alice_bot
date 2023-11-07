@@ -6,7 +6,7 @@ use serenity::model::prelude::ChannelId;
 use super::formatters::log_embed_formatter::log_embed_formatter;
 
 pub async fn channel_message_logger(ctx: &Context, msg: &Message){
-    if msg.author.bot {
+    if msg.author.bot{
         return;
     }
         let log_channel_id: ChannelId = ChannelId(967685973456609320);

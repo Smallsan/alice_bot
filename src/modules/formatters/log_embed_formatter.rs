@@ -25,10 +25,10 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed{
 
         let mut embed = CreateEmbed::default();
         embed
-        .set_author(author.clone())
+        .set_author(author)
         .colour(Colour::MAGENTA)
         .description(formatted_description)
-        .thumbnail(&msg.author.avatar_url().unwrap_or_default())
+        .thumbnail(msg.author.avatar_url().unwrap_or_default())
         .footer(|footer| footer.text("User ID: ".to_string() + &msg.author.id.to_string() ))
         .timestamp(msg.timestamp);
 

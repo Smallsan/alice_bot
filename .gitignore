@@ -1,3 +1,4 @@
 /target
 Cargo.lock
 config/keys.json
+database/database.sqlite

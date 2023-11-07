@@ -7,10 +7,12 @@ use crate::commands::admin_commands::*;
 use modules::channel_message_logger::channel_message_logger;
 use modules::message_stalker::message_stalker;
 
-
+use sea_orm::Database;
+use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
 
 use std::collections::HashSet;
+use std::fs;
 use std::fs::File;
 use std::io::Read;
 use std::sync::Arc;
@@ -25,8 +27,6 @@ use serenity::model::gateway::Ready;
 use serenity::prelude::*;
 use serenity::model::channel::Message;
 use tracing::error;
-
-
 
 
 pub struct ShardManagerContainer;
@@ -52,7 +52,7 @@ impl EventHandler for Handler {
     
     async fn message(&self, ctx: Context, msg: Message) {
         channel_message_logger(&ctx, &msg).await;
-        message_stalker(&ctx, &msg).await;
+        message_stalker(&msg).await;
         }
         
     }
@@ -60,6 +60,8 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
+
+    let database: DatabaseConnection = connect_database().await;
 
     tracing_subscriber::fmt::init();
 
@@ -108,18 +110,37 @@ async fn main() {
 }
 
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 struct Config {
     discord_api_key: String,
+    discord_test_api_key: String,
 }
 
 fn get_token_from_json() -> String{
+    create_directory("config/keys.json");
     let mut file = File::open("config/keys.json").expect("Unable to find keys.json");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Unable to read keys.json");
     let config: Config = serde_json::from_str(&contents).expect("Unable to parse keys.json");
-
-    let token = config.discord_api_key;
+    let token = config.discord_test_api_key;
     return token;
 }
+
+async fn connect_database() -> DatabaseConnection{
+    create_directory("database");
+    let database: DatabaseConnection = Database::connect("sqlite://database/database.sqlite?mode=rwc").await.expect("Unable to connect to database");
+    return database;
+
+}
+
+fn create_directory(directory_name: &str) {
+    if fs::metadata(directory_name).is_ok() {
+        println!("Directory {} Already Exists", directory_name);
+        return;
+    }
+    fs::create_dir(directory_name).expect("Error creating directory");
+    println!("Directory {} Has Been Created", directory_name);
+}
+
+
 
