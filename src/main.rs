@@ -6,7 +6,7 @@ use crate::commands::admin_commands::*;
 
 use modules::channel_message_logger::channel_message_logger;
 use modules::message_stalker::message_stalker;
-use modules::message_throwback::message_throwback;
+use modules::message_storage_logger::message_storage_logger;
 
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
@@ -30,34 +30,19 @@ use serenity::model::channel::Message;
 use tracing::error;
 
 pub struct ShardManagerContainer;
-pub struct MessageStorage {
-    messages: Vec<String>,
-}
-impl MessageStorage {
-    pub fn new() -> Self {
-        MessageStorage {
-            messages: Vec::with_capacity(5),
-        }
-    }
-
-    pub fn add_message(&mut self, message: &str) {
-        if self.messages.len() >= 5 {
-            self.messages.remove(0);
-        }
-        self.messages.push(message.to_string());
-    }
-
-    pub fn get_messages(&self) -> Vec<String> {
-        self.messages.clone()
-    }
-}
 
 impl TypeMapKey for ShardManagerContainer {
     type Value = Arc<Mutex<ShardManager>>;
 }
 
+pub struct MessageStorage;
+
+impl TypeMapKey for MessageStorage {
+    type Value = Arc<Mutex<Vec<String>>>;
+}
+
 #[group]
-#[commands(quit, bubble)]
+#[commands(quit, bubble, backtrack)]
 struct General;
 struct Handler;
 
@@ -74,7 +59,7 @@ impl EventHandler for Handler {
     
     async fn message(&self, ctx: Context, msg: Message) {
         channel_message_logger(&ctx, &msg).await;
-        message_throwback(&ctx, &msg).await;
+        message_storage_logger(&ctx, &msg).await;
         message_stalker(&msg).await;
         }
     }
@@ -117,6 +102,7 @@ async fn main() {
     {
         let mut data = client.data.write().await;
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
+        data.insert::<MessageStorage>(Arc::new(Mutex::new(Vec::new())));
     }
 
     let shard_manager = client.shard_manager.clone();
