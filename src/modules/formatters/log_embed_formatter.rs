@@ -6,6 +6,12 @@ use serenity::builder::{CreateEmbedAuthor, CreateEmbed};
 
 
 pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed{
+        let attachment: String = match msg.attachments.first()
+        {
+            Some(first_attachment) => first_attachment.url.to_owned(),
+            None => "".to_owned(),
+
+        };
         let hash_author = HashMap::from([
             ("icon_url", Value::String(msg.author.avatar_url().unwrap_or_default())),
             ("name", Value::String(msg.author.name.to_string())),
@@ -30,7 +36,9 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed{
         .description(formatted_description)
         .thumbnail(msg.author.avatar_url().unwrap_or_default())
         .footer(|footer| footer.text("User ID: ".to_string() + &msg.author.id.to_string() ))
-        .timestamp(msg.timestamp);
+        .timestamp(msg.timestamp)
+        .attachment(attachment);
+        
 
         embed
 
