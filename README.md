@@ -9,5 +9,5 @@ A MultiPurpose Discord Bot Coded In Rust.
 - Anti NSFW Filter - Uses AI to detect *Sussy Images* sent in your server and deletes them.
 - Record Everything Everywhere - Records every single message in all the channels in the server and saves them in *Text Files*
 - Record Everything Here - Records every single message in a specific channel.
-
-
+- BackTrack - Shows past (?) messages.
+- Reputation Tracker - Allows members to do +rep -rep and show reps of members.
