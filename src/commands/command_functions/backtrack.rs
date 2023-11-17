@@ -27,7 +27,7 @@ pub async fn get_backtracked_message(ctx: &Context, msg: &Message) -> CreateEmbe
         for messages in message_storage_vector.iter() {
             formatted_message += messages;
         },
-        None => formatted_message += "Cannot Retrive Old Messages",
+        None => formatted_message += "Cannot Retrieve Old Messages",
     }
 
     let mut embed = CreateEmbed::default();
