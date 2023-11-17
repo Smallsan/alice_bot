@@ -12,6 +12,7 @@ use sea_orm::Database;
 use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
 
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs;
 use std::fs::File;
@@ -38,7 +39,7 @@ impl TypeMapKey for ShardManagerContainer {
 pub struct MessageStorage;
 
 impl TypeMapKey for MessageStorage {
-    type Value = Arc<Mutex<Vec<String>>>;
+    type Value = Arc<Mutex<HashMap<u64,Vec<String>>>>;
 }
 
 #[group]
@@ -102,7 +103,7 @@ async fn main() {
     {
         let mut data = client.data.write().await;
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
-        data.insert::<MessageStorage>(Arc::new(Mutex::new(Vec::new())));
+        data.insert::<MessageStorage>(Arc::new(Mutex::new(HashMap::new())));
     }
 
     let shard_manager = client.shard_manager.clone();
