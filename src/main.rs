@@ -36,10 +36,16 @@ impl TypeMapKey for ShardManagerContainer {
     type Value = Arc<Mutex<ShardManager>>;
 }
 
-pub struct MessageStorage;
+pub struct MessageStorageContainer;
 
-impl TypeMapKey for MessageStorage {
+impl TypeMapKey for MessageStorageContainer {
     type Value = Arc<Mutex<HashMap<u64,Vec<String>>>>;
+}
+
+pub struct DatabaseConnectionContainer;
+
+impl TypeMapKey for DatabaseConnectionContainer {
+    type Value = Arc<Mutex<DatabaseConnection>>;
 }
 
 #[group]
@@ -103,7 +109,8 @@ async fn main() {
     {
         let mut data = client.data.write().await;
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
-        data.insert::<MessageStorage>(Arc::new(Mutex::new(HashMap::new())));
+        data.insert::<MessageStorageContainer>(Arc::new(Mutex::new(HashMap::new())));
+        data.insert::<DatabaseConnectionContainer>(Arc::new(database_connection.into()));
     }
 
     let shard_manager = client.shard_manager.clone();

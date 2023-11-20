@@ -9,7 +9,6 @@ pub async fn channel_message_logger(ctx: &Context, msg: &Message) {
     if msg.author.bot{
         return;
     }
-
         let log_channel_id: ChannelId = ChannelId(967685973456609320);
 
         let embed: CreateEmbed = log_embed_formatter(ctx, msg).await;
