@@ -11,3 +11,23 @@ A MultiPurpose Discord Bot Coded In Rust.
 - Record Everything Here - Records every single message in a specific channel.
 - BackTrack - Shows past (?) messages.
 - Reputation Tracker - Allows members to do +rep -rep and show reps of members.
+
+## How To Run
+
+1. Create a `keys.json` inside the `config folder`.
+
+2. Place your discord api key inside the `keys.json`.
+
+```json
+{
+    "discord_api_key": "Your discord api key",
+}
+```
+
+3. Configure the `config.json` inside the `config folder`.
+
+4. Either run the project by typing `cargo run --release` in a terminal at the directory or compile it and run it the same way.
+
+
+
+
