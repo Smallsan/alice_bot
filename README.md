@@ -1,32 +1,43 @@
-# Alice Bot (Still Work In Progress!!)
+# Alice Bot (Still Work In Progress!!) (Like Seriously)
+
 A MultiPurpose Discord Bot Coded In Rust.
 
-## Functions
-- Stalker Mode - Give it **Discord UserID's** and you shall receive *via dms*.
-- Channel Event Logger - Give it a **Discord Channel** and it'll record all the events in your server *kinda like dyno*.
-- Local Event Logger - This will record all the events in your server and store it in a **Text File** like fresh one *per day*.
-- Attachment Downloader - Downloads all the attachments sent in your server *Porn or non Porn* in your **Local Storage**.
-- Anti NSFW Filter - Uses AI to detect *Sussy Images* sent in your server and deletes them.
-- Record Everything Everywhere - Records every single message in all the channels in the server and saves them in *Text Files*
-- Record Everything Here - Records every single message in a specific channel.
-- BackTrack - Shows past (?) messages.
-- Reputation Tracker - Allows members to do +rep -rep and show reps of members.
+## Features
 
+- Stalker Mode - Have you ever wanted to stalk a special someone in your discord server? You just need their ```UserID``` and you're good to go.
+- Channel Event Logger - It just logs events that happen inside your servers into a text channel, Just provide a ```ChannelID```. *(It's Kinda Like Dyno)*
+- Local Event Logger - It's just like the Channel Event Logger but instead of saving it in a channel, It saves it locally in a text file. *(One Text File Per Day Dear Lord...)*
+- Attachment Downloader - It saves all the attachments that anyone sends in the server to your local drive. *(It Doesn't Filter Out NSFW...)*
+- Anti NSFW Filter - Uses a trained AI model to detect and auto delete explicit images sent in your server's non NSFW channels.
+- Record Everything Everywhere - It logs every single message sent in every single channel in the server, It saves it in separated text files named after the channel names.
+- Record Everything Here - Records every single message but in just a specific channel.
+- Backtrack - It shows recently sent messages in the channel.
+- Reputation Tracker - It allows you to have a reputation system in your server, And be able to display that.
+- Booru Search - It allows you to fetch images from either danbooru or safebooru.
+  
 ## How To Run
 
 1. Create a `keys.json` inside the `config folder`.
 
 2. Place your discord api key inside the `keys.json`.
 
-```json
-{
-    "discord_api_key": "Your discord api key",
-}
-```
+    ```json
+    {
+        "discord_api_key": "Your discord api key",
+    }
+    ```
 
 3. Configure the `config.json` inside the `config folder`.
 
-4. Either run the project by typing `cargo run --release` in a terminal at the directory or compile it and run it the same way.
+    ```json
+    {
+        "log_channel_id": "Channel_ID of where you want logs to be sent"
+    }
+    ```
+
+4. Either run the project by typing `cargo run --release` in the terminal or compile it and run it the same way.
+
+
 
 
 
