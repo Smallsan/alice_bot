@@ -1,9 +1,9 @@
-use serenity::model::channel::Message;
-use serenity::client::Context;
 use crate::MessageStorageContainer;
+use serenity::client::Context;
+use serenity::model::channel::Message;
 
 pub async fn message_storage_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot || msg.content.contains("!backtrack"){
+    if msg.author.bot || msg.content.contains("!backtrack") {
         return;
     }
 
@@ -33,20 +33,26 @@ pub async fn message_storage_logger(ctx: &Context, msg: &Message) {
         formatted_message += &get_author_message(msg);
         message_storage_vector.push(formatted_message);
     }
-
 }
 
 fn get_replied_message(msg: &Message) -> String {
-
     if let Some(replied_message_box) = &msg.referenced_message {
-        return format!("┌── {:?} Said: {:?} \n  ", replied_message_box.author.name.to_uppercase(), &replied_message_box.content)
+        return format!(
+            "┌── {:?} Said: {:?} \n  ",
+            replied_message_box.author.name.to_uppercase(),
+            &replied_message_box.content
+        );
     }
 
     return String::new();
 }
 
 fn get_author_message(msg: &Message) -> String {
-    let author_message = format!("{:?} Said: {:?} \n  ", msg.author.name.to_string().to_uppercase(), &msg.content);
-    
+    let author_message = format!(
+        "{:?} Said: {:?} \n  ",
+        msg.author.name.to_string().to_uppercase(),
+        &msg.content
+    );
+
     return author_message;
 }

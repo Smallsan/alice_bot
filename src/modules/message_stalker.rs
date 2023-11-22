@@ -6,6 +6,4 @@ pub async fn message_stalker(msg: &Message) {
         return;
     }
     let stalker_channel_id: ChannelId = ChannelId(967685973456609320);
-
-
 }

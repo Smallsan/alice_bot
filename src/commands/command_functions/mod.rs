@@ -1,2 +1,2 @@
-pub mod bubble_wrap;
 pub mod backtrack;
+pub mod bubble_wrap;
