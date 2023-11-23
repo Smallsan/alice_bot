@@ -25,10 +25,10 @@ async fn bubble(ctx: &Context, msg: &Message) -> CommandResult {
 
 #[command]
 async fn backtrack(ctx: &Context, msg: &Message) -> CommandResult {
-    let backtrack_message_embed = get_backtracked_message(&ctx, &msg).await;
+    let backtrack_msg_embed = get_backtracked_message(&ctx, &msg).await;
     msg.channel_id
-        .send_message(&ctx.http, |message| {
-            message.set_embed(backtrack_message_embed)
+        .send_message(&ctx.http, |msg| {
+            msg.set_embed(backtrack_msg_embed)
         })
         .await?;
 

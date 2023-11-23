@@ -4,9 +4,9 @@ mod modules;
 use crate::commands::admin_commands::*;
 use crate::commands::user_commands::*;
 
-use modules::channel_message_logger::channel_message_logger;
-use modules::message_stalker::message_stalker;
-use modules::message_storage_logger::message_storage_logger;
+use modules::channel_msg_logger::channel_msg_logger;
+use modules::msg_stalker::msg_stalker;
+use modules::msg_storage_logger::msg_storage_logger;
 
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
@@ -48,6 +48,16 @@ impl TypeMapKey for DatabaseConnectionContainer {
     type Value = Arc<Mutex<DatabaseConnection>>;
 }
 
+pub struct ParsedConfig {
+    log_channel_id: u64,
+    msg_stalker_user_id: u64,
+    msg_stalker_receiver_id: u64,
+}
+
+impl TypeMapKey for ParsedConfig {
+    type Value = Arc<Mutex<ParsedConfig>>;
+}
+
 #[group]
 #[commands(quit, bubble, backtrack)]
 struct General;
@@ -64,9 +74,9 @@ impl EventHandler for Handler {
     }
 
     async fn message(&self, ctx: Context, msg: Message) {
-        channel_message_logger(&ctx, &msg).await;
-        message_storage_logger(&ctx, &msg).await;
-        message_stalker(&msg).await;
+        channel_msg_logger(&ctx, &msg).await;
+        msg_storage_logger(&ctx, &msg).await;
+        msg_stalker(&ctx, &msg).await;
     }
 }
 
@@ -110,7 +120,7 @@ async fn main() {
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
         data.insert::<MessageStorageContainer>(Arc::new(Mutex::new(HashMap::new())));
         data.insert::<DatabaseConnectionContainer>(Arc::new(database_connection.into()));
-        data.insert::<Config>(Arc::new(load_config().into()));
+        data.insert::<ParsedConfig>(Arc::new(config_parser(load_config()).into()));
     }
 
     let shard_manager = client.shard_manager.clone();
@@ -135,6 +145,8 @@ struct Keys {
 #[derive(Serialize, Deserialize)]
 struct Config {
     log_channel_id: String,
+    msg_stalker_user_id: String,
+    msg_stalker_receiver_id: String,
 }
 
 impl TypeMapKey for Config {
@@ -164,6 +176,14 @@ fn load_config() -> Config {
         .expect("Unable to read config.json");
     let config: Config = serde_json::from_str(&contents).expect("Unable to parse config.json");
     return config;
+}
+
+fn config_parser(config: Config) -> ParsedConfig {
+    ParsedConfig {
+        log_channel_id: (config.log_channel_id.parse::<u64>().expect("Unable to parse log_channel_id")),
+        msg_stalker_user_id: (config.msg_stalker_user_id.parse::<u64>().expect("Unable to parse log_channel_id")),
+        msg_stalker_receiver_id: (config.msg_stalker_receiver_id.parse::<u64>().expect("Unable to parse log_channel_id")) 
+    }
 }
 
 /// Sets Up a Database Connection.

@@ -2,3 +2,4 @@
 Cargo.lock
 config/keys.json
 database/database.sqlite
+config/config.json
