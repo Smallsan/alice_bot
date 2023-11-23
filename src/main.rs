@@ -179,9 +179,18 @@ fn load_config() -> Config {
 
 fn config_parser(config: Config) -> ParsedConfig {
     ParsedConfig {
-        log_channel_id: (config.log_channel_id.parse::<u64>().expect("Unable to parse log_channel_id")),
-        msg_stalker_user_id: (config.msg_stalker_user_id.parse::<u64>().expect("Unable to parse log_channel_id")),
-        msg_stalker_receiver_id: (config.msg_stalker_receiver_id.parse::<u64>().expect("Unable to parse log_channel_id")) 
+        log_channel_id: (config
+            .log_channel_id
+            .parse::<u64>()
+            .expect("Unable to parse log_channel_id")),
+        msg_stalker_user_id: (config
+            .msg_stalker_user_id
+            .parse::<u64>()
+            .expect("Unable to parse log_channel_id")),
+        msg_stalker_receiver_id: (config
+            .msg_stalker_receiver_id
+            .parse::<u64>()
+            .expect("Unable to parse log_channel_id")),
     }
 }
 

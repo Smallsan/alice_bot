@@ -29,7 +29,7 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed {
         msg_guild_id, msg_channel_id, msg_id
     );
     let msg_channel_link: String = format!("{}", msg_channel_name);
-    let formatted_description: String = format!(
+    let formatted_desc: String = format!(
         "** Message sent in ** {}\n{}\n{}",
         msg_channel_link, msg_link, msg_content
     );
@@ -38,7 +38,7 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> CreateEmbed {
     embed
         .set_author(author)
         .colour(Colour::MAGENTA)
-        .description(formatted_description)
+        .description(formatted_desc)
         .thumbnail(msg.author.avatar_url().unwrap_or_default())
         .footer(|footer| footer.text("User ID: ".to_string() + &msg.author.id.to_string()))
         .timestamp(msg.timestamp);

@@ -59,8 +59,3 @@ A MultiPurpose Discord Bot Coded In Rust.
 - Make sure you allow ```Direct messages from server members``` in your discord account.
   
 - Be sure to check if you correctly values in the ```msg_stalker_user_id``` and ```msg_stalker_receiver_id```
-
-
-
-
-
