@@ -140,7 +140,6 @@ async fn main() {
 #[derive(Serialize, Deserialize)]
 struct Keys {
     discord_api_key: String,
-    discord_test_api_key: String,
 }
 #[derive(Serialize, Deserialize)]
 struct Config {
@@ -162,7 +161,7 @@ fn get_token_from_json() -> String {
         .read_to_string(&mut contents)
         .expect("Unable to read keys.json");
     let keys: Keys = serde_json::from_str(&contents).expect("Unable to parse keys.json");
-    let token = keys.discord_test_api_key;
+    let token = keys.discord_api_key;
     return token;
 }
 
