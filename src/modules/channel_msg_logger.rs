@@ -1,4 +1,3 @@
-use serenity::builder::CreateEmbed;
 use serenity::client::Context;
 use serenity::model::channel::Message;
 use serenity::model::prelude::ChannelId;
@@ -26,9 +25,9 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
         log_channel_id = ChannelId(config_hashmap.lock().await.log_channel_id);
     }
 
-    let embed: CreateEmbed = log_embed_formatter(ctx, msg).await;
+    let embed_vec = log_embed_formatter(ctx, msg).await;
 
     let _send_message = log_channel_id
-        .send_message(&ctx.http, |message| message.set_embed(embed))
+        .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
         .await;
 }

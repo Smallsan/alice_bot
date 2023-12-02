@@ -38,7 +38,7 @@ pub async fn msg_stalker(ctx: &Context, msg: &Message) {
         return;
     }
 
-    let formatted_msg = log_embed_formatter(&ctx, msg).await;
+    let embed_vec = log_embed_formatter(&ctx, msg).await;
     let stalker_receiver = &msg_stalker_config
         .msg_stalker_receiver_id
         .to_user(&ctx.http)
@@ -49,7 +49,7 @@ pub async fn msg_stalker(ctx: &Context, msg: &Message) {
         Ok(_) => {
             if let Ok(stalker_private_channel) = stalker_private_channel_result {
                 stalker_private_channel
-                    .send_message(&ctx.http, |msg| msg.set_embed(formatted_msg))
+                    .send_message(&ctx.http, |msg| msg.add_embeds(embed_vec))
                     .await
                     .expect("Unable to send direct message to user");
             }

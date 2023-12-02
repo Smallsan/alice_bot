@@ -86,7 +86,7 @@ async fn main() {
 
     tracing_subscriber::fmt::init();
 
-    let token = get_token_from_json();
+    let token = get_key_from_json();
 
     let http = Http::new(&token);
 
@@ -153,7 +153,7 @@ impl TypeMapKey for Config {
 }
 
 /// Gets The Discord Bot Token From The Config File.
-fn get_token_from_json() -> String {
+fn get_key_from_json() -> String {
     create_directory("config/keys.json");
     let mut key_file = File::open("config/keys.json").expect("Unable to find keys.json");
     let mut contents = String::new();
