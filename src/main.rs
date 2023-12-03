@@ -50,8 +50,10 @@ impl TypeMapKey for DatabaseConnectionContainer {
 
 pub struct ParsedConfig {
     log_channel_id: u64,
-    msg_stalker_user_id: u64,
-    msg_stalker_receiver_id: u64,
+    log_channel_enabled: bool,
+    stalker_user_id: u64,
+    stalker_receiver_id: u64,
+    stalker_enabled: bool,
 }
 
 impl TypeMapKey for ParsedConfig {
@@ -144,8 +146,10 @@ struct Keys {
 #[derive(Serialize, Deserialize)]
 struct Config {
     log_channel_id: String,
-    msg_stalker_user_id: String,
-    msg_stalker_receiver_id: String,
+    log_channel_enabled: String,
+    stalker_user_id: String,
+    stalker_receiver_id: String,
+    stalker_enabled: String,
 }
 
 impl TypeMapKey for Config {
@@ -183,14 +187,22 @@ fn config_parser(config: Config) -> ParsedConfig {
             .log_channel_id
             .parse::<u64>()
             .expect("Unable to parse log_channel_id")),
-        msg_stalker_user_id: (config
-            .msg_stalker_user_id
+        log_channel_enabled: (config
+            .log_channel_enabled
+            .parse::<bool>()
+            .expect("Unable to parse log_channel_enabled")),
+        stalker_user_id: (config
+            .stalker_user_id
             .parse::<u64>()
-            .expect("Unable to parse log_channel_id")),
-        msg_stalker_receiver_id: (config
-            .msg_stalker_receiver_id
+            .expect("Unable to parse stalker_user_id")),
+        stalker_receiver_id: (config
+            .stalker_receiver_id
             .parse::<u64>()
-            .expect("Unable to parse log_channel_id")),
+            .expect("Unable to parse stalker_receiver_id")),
+        stalker_enabled: (config
+            .stalker_enabled
+            .parse::<bool>()
+            .expect("Unable to parse log_channel_enabled")),
     }
 }
 

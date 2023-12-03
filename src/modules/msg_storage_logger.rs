@@ -9,7 +9,7 @@ pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
 
     let channel_id = msg.channel_id.as_u64();
 
-    let msg_storage_hashmap = {
+    let msg_storage = {
         let data_read = ctx.data.read().await;
         data_read
             .get::<MessageStorageContainer>()
@@ -17,21 +17,21 @@ pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
             .clone()
     };
 
-    let mut msg_storage_hashmap_locked = msg_storage_hashmap.lock().await;
+    let mut msg_storage_locked = msg_storage.lock().await;
 
-    if !msg_storage_hashmap_locked.contains_key(channel_id) {
-        msg_storage_hashmap_locked.insert(*channel_id, Vec::new());
+    if !msg_storage_locked.contains_key(channel_id) {
+        msg_storage_locked.insert(*channel_id, Vec::new());
     }
 
     let mut formatted_msg = String::new();
 
-    if let Some(msg_storage_vector) = msg_storage_hashmap_locked.get_mut(channel_id) {
-        if msg_storage_vector.len() > 5 {
-            msg_storage_vector.remove(0);
+    if let Some(msg_vector) = msg_storage_locked.get_mut(channel_id) {
+        if msg_vector.len() > 5 {
+            msg_vector.remove(0);
         }
         formatted_msg += &get_replied_msg(msg);
         formatted_msg += &get_author_msg(msg);
-        msg_storage_vector.push(formatted_msg);
+        msg_vector.push(formatted_msg);
     }
 }
 

@@ -1,6 +1,6 @@
 use serde_json::Value;
 use serenity::builder::{CreateEmbed, CreateEmbedAuthor};
-use serenity::model::channel::{Message, Attachment};
+use serenity::model::channel::{Attachment, Message};
 use serenity::{client::Context, utils::Colour};
 use std::collections::HashMap;
 
@@ -38,8 +38,6 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> Vec<CreateEmbe
         msg_channel_link, msg_link, msg_content
     );
 
-
-
     let mut message_embed = CreateEmbed::default();
     message_embed
         .set_author(author)
@@ -49,22 +47,21 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> Vec<CreateEmbe
         .footer(|footer| footer.text("User ID: ".to_string() + &msg.author.id.to_string()))
         .timestamp(msg.timestamp);
 
-        let mut attachment_counter = 0;
-        for attachment in attachment_vec {
-            attachment_counter += 1;
-            if attachment_counter == 1 {
-                message_embed.image(&attachment.url);
-                continue;
-            }
-            let mut image_embed = CreateEmbed::default();
-            image_embed
-                .title(&attachment.filename)
-                .image(&attachment.url)
-                .colour(Colour::MAGENTA);
-            create_embed_vec.push(image_embed);
+    let mut attachment_counter = 0;
+    for attachment in attachment_vec {
+        attachment_counter += 1;
+        if attachment_counter == 1 {
+            message_embed.image(&attachment.url);
+            continue;
         }
-        create_embed_vec.insert(0, message_embed);
+        let mut image_embed = CreateEmbed::default();
+        image_embed
+            .title(&attachment.filename)
+            .image(&attachment.url)
+            .colour(Colour::MAGENTA);
+        create_embed_vec.push(image_embed);
+    }
+    create_embed_vec.insert(0, message_embed);
 
     return create_embed_vec;
 }
-

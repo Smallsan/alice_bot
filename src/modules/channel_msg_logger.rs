@@ -19,10 +19,15 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
     };
 
     let log_channel_id: ChannelId;
-
-    // Lock Block
+    let log_channel_enabled: bool;
     {
-        log_channel_id = ChannelId(config_hashmap.lock().await.log_channel_id);
+        let config_hashmap_locked = config_hashmap.lock().await;
+        log_channel_id = ChannelId(config_hashmap_locked.log_channel_id);
+        log_channel_enabled = config_hashmap_locked.log_channel_enabled;
+    }
+
+    if !log_channel_enabled {
+        return;
     }
 
     let embed_vec = log_embed_formatter(ctx, msg).await;

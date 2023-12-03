@@ -8,7 +8,7 @@ use crate::MessageStorageContainer;
 pub async fn get_backtracked_msg(ctx: &Context, msg: &Message) -> CreateEmbed {
     let channel_id = msg.channel_id.as_u64();
 
-    let msg_storage_hashmap = {
+    let msg_storage = {
         let data_read = ctx.data.read().await;
         data_read
             .get::<MessageStorageContainer>()
@@ -20,9 +20,9 @@ pub async fn get_backtracked_msg(ctx: &Context, msg: &Message) -> CreateEmbed {
 
     // Lock Block
     {
-        let msg_storage_hashmap_locked = msg_storage_hashmap.lock().await;
+        let msg_storage_locked = msg_storage.lock().await;
 
-        match msg_storage_hashmap_locked.get(channel_id) {
+        match msg_storage_locked.get(channel_id) {
             Some(msg_storage_vector) => {
                 for msg in msg_storage_vector.iter() {
                     formatted_msg += msg;

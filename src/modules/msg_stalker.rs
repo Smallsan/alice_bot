@@ -7,8 +7,9 @@ use crate::ParsedConfig;
 use super::formatters::log_embed_formatter::log_embed_formatter;
 
 struct MessageStalkerConfig {
-    msg_stalker_user_id: UserId,
-    msg_stalker_receiver_id: UserId,
+    user_id: UserId,
+    receiver_id: UserId,
+    enabled: bool,
 }
 
 pub async fn msg_stalker(ctx: &Context, msg: &Message) {
@@ -16,9 +17,9 @@ pub async fn msg_stalker(ctx: &Context, msg: &Message) {
         return;
     }
 
-    let msg_stalker_config: MessageStalkerConfig;
+    let stalker_config: MessageStalkerConfig;
 
-    let config_hashmap = {
+    let config = {
         let data_read = ctx.data.read().await;
         data_read
             .get::<ParsedConfig>()
@@ -27,20 +28,21 @@ pub async fn msg_stalker(ctx: &Context, msg: &Message) {
     };
 
     {
-        let locked_config_hashmap = config_hashmap.lock().await;
-        msg_stalker_config = MessageStalkerConfig {
-            msg_stalker_user_id: UserId(locked_config_hashmap.msg_stalker_user_id),
-            msg_stalker_receiver_id: UserId(locked_config_hashmap.msg_stalker_receiver_id),
+        let config_locked = config.lock().await;
+        stalker_config = MessageStalkerConfig {
+            user_id: UserId(config_locked.stalker_user_id),
+            receiver_id: UserId(config_locked.stalker_receiver_id),
+            enabled: config_locked.stalker_enabled,
         }
     }
 
-    if msg.author.id != msg_stalker_config.msg_stalker_user_id {
+    if msg.author.id != stalker_config.user_id || !stalker_config.enabled {
         return;
     }
 
     let embed_vec = log_embed_formatter(&ctx, msg).await;
-    let stalker_receiver = &msg_stalker_config
-        .msg_stalker_receiver_id
+    let stalker_receiver = &stalker_config
+        .receiver_id
         .to_user(&ctx.http)
         .await
         .expect("Unable to get fetch from stalker user id");
