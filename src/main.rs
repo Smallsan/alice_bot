@@ -5,10 +5,11 @@ use crate::commands::admin_commands::*;
 use crate::commands::user_commands::*;
 
 use modules::channel_msg_logger::channel_msg_logger;
+use modules::local_msg_logger::local_message_logger;
 use modules::msg_stalker::msg_stalker;
 use modules::msg_storage_logger::msg_storage_logger;
-use modules::tools::create_directory::create_directory;
 use modules::tools::config_manager::load_config;
+use modules::tools::create_directory::create_directory;
 use modules::tools::key_manager::get_key_from_json;
 
 use sea_orm::Database;
@@ -91,6 +92,7 @@ impl EventHandler for Handler {
 
     async fn message(&self, ctx: Context, msg: Message) {
         channel_msg_logger(&ctx, &msg).await;
+        local_message_logger(&ctx, &msg).await;
         msg_storage_logger(&ctx, &msg).await;
         msg_stalker(&ctx, &msg).await;
     }
@@ -107,6 +109,8 @@ async fn main() {
     let http = Http::new(&token);
 
     create_directory("log");
+
+    create_directory("log/attachments");
 
     let (owners, _bot_id) = match http.get_current_application_info().await {
         Ok(info) => {
@@ -164,4 +168,3 @@ async fn connect_database() -> DatabaseConnection {
             .expect("Unable to connect to database");
     return database;
 }
-

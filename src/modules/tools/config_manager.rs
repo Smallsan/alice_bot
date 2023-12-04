@@ -1,7 +1,7 @@
 use std::{fs::File, io::Read};
 
-use crate::{ParsedConfig, Config};
 use super::create_directory::create_directory;
+use crate::{Config, ParsedConfig};
 
 pub fn load_config() -> ParsedConfig {
     create_directory("config/config.json");
@@ -12,7 +12,7 @@ pub fn load_config() -> ParsedConfig {
         .expect("Unable to read config.json");
     let config: Config = serde_json::from_str(&contents).expect("Unable to parse config.json");
     let parsed_config = config_parser(config);
-    return parsed_config
+    return parsed_config;
 }
 
 fn config_parser(config: Config) -> ParsedConfig {

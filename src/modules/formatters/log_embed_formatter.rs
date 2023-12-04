@@ -18,24 +18,24 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> Vec<CreateEmbe
 
     let author = CreateEmbedAuthor(hash_author);
 
-    let msg_content: String = msg.content.to_string();
-    let msg_guild_id: String = msg.guild_id.unwrap_or_default().to_string();
-    let msg_channel_id: String = msg.channel_id.to_string();
-    let msg_channel_name = if let Ok(msg_channel) = msg.channel(&ctx.http).await {
-        msg_channel.to_string()
-    } else {
-        "Unknown Channel".to_string()
+    let content: String = msg.content.to_string();
+    let guild_id: String = msg.guild_id.unwrap_or_default().to_string();
+    let channel_id: String = msg.channel_id.to_string();
+    let channel_name = match msg.channel(&ctx.http).await {
+        Ok(channel) => channel.to_string(),
+        Err(_) => "Unknown-Channel".to_string(),
     };
-    let msg_id: String = msg.id.to_string();
-    let msg_link: String = format!(
+
+    let id: String = msg.id.to_string();
+    let link: String = format!(
         "[**Jump To Message**](https://discord.com/channels/{}/{}/{})",
-        msg_guild_id, msg_channel_id, msg_id
+        guild_id, channel_id, id
     );
-    let msg_channel_link: String = format!("{}", msg_channel_name);
+    let msg_channel_link: String = format!("{}", channel_name);
 
     let formatted_desc: String = format!(
         "** Message sent in ** {}\n{}\n{}",
-        msg_channel_link, msg_link, msg_content
+        msg_channel_link, link, content
     );
 
     let mut message_embed = CreateEmbed::default();

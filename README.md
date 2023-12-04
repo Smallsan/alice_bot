@@ -8,9 +8,9 @@ A MultiPurpose Discord Bot Coded In Rust.
   
 - [x] Channel Event Logger - It just logs events that happen inside your servers into a text channel, Just provide a ```ChannelID```. *(It's Kinda Like Dyno)*
   
-- [ ] Local Event Logger - It's just like the Channel Event Logger but instead of saving it in a channel, It saves it locally in a text file. *(One Text File Per Day Dear Lord...)*
+- [x] Local Event Logger - It's just like the Channel Event Logger but instead of saving it in a channel, It saves it locally in a text file. *(One Text File Per Day Dear Lord...)*
   
-- [ ] Attachment Downloader - It saves all the attachments that anyone sends in the server to your local drive. *(It Doesn't Filter Out NSFW...)*
+- [x] Attachment Downloader - It saves all the attachments that anyone sends in the server to your local drive. *(It Doesn't Filter Out NSFW...)*
   
 - [ ] Anti NSFW Filter - Uses a trained AI model to detect and auto delete explicit images sent in your server's non NSFW channels.
   
