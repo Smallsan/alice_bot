@@ -5,7 +5,7 @@ use serenity::utils::Colour;
 
 use crate::MessageStorageContainer;
 
-pub async fn get_backtracked_msg(ctx: &Context, msg: &Message) -> CreateEmbed {
+pub async fn get_backtrack(ctx: &Context, msg: &Message) -> CreateEmbed {
     let channel_id = msg.channel_id.as_u64();
 
     let msg_storage = {

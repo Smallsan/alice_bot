@@ -5,7 +5,7 @@ use crate::commands::admin_commands::*;
 use crate::commands::user_commands::*;
 
 use modules::channel_msg_logger::channel_msg_logger;
-use modules::local_msg_logger::local_message_logger;
+use modules::local_msg_logger::local_logger;
 use modules::msg_stalker::msg_stalker;
 use modules::msg_storage_logger::msg_storage_logger;
 use modules::tools::config_manager::load_config;
@@ -57,6 +57,7 @@ pub struct Keys {
 pub struct ParsedConfig {
     log_channel_id: u64,
     log_channel_enabled: bool,
+    local_logger_enabled: bool,
     stalker_user_id: u64,
     stalker_receiver_id: u64,
     stalker_enabled: bool,
@@ -70,6 +71,7 @@ impl TypeMapKey for ParsedConfig {
 pub struct Config {
     log_channel_id: String,
     log_channel_enabled: String,
+    local_logger_enabled: String,
     stalker_user_id: String,
     stalker_receiver_id: String,
     stalker_enabled: String,
@@ -92,7 +94,7 @@ impl EventHandler for Handler {
 
     async fn message(&self, ctx: Context, msg: Message) {
         channel_msg_logger(&ctx, &msg).await;
-        local_message_logger(&ctx, &msg).await;
+        local_logger(&ctx, &msg).await;
         msg_storage_logger(&ctx, &msg).await;
         msg_stalker(&ctx, &msg).await;
     }

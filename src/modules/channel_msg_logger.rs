@@ -6,6 +6,11 @@ use crate::ParsedConfig;
 
 use super::formatters::log_embed_formatter::log_embed_formatter;
 
+struct LogChannelConfig{
+    channel_id: ChannelId,
+    enabled: bool,
+}
+
 pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
     if msg.author.bot {
         return;
@@ -18,21 +23,22 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
             .clone()
     };
 
-    let log_channel_id: ChannelId;
-    let log_channel_enabled: bool;
+    let log_channel_config : LogChannelConfig;
     {
         let config_hashmap_locked = config_hashmap.lock().await;
-        log_channel_id = ChannelId(config_hashmap_locked.log_channel_id);
-        log_channel_enabled = config_hashmap_locked.log_channel_enabled;
+        log_channel_config = LogChannelConfig{
+            channel_id: ChannelId(config_hashmap_locked.log_channel_id),
+            enabled: config_hashmap_locked.log_channel_enabled,
+        }
     }
-
-    if !log_channel_enabled {
+    
+    if !log_channel_config.enabled {
         return;
     }
 
     let embed_vec = log_embed_formatter(ctx, msg).await;
 
-    let _send_message = log_channel_id
+    let _send_message = log_channel_config.channel_id
         .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
         .await;
 }

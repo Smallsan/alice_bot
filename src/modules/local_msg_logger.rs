@@ -1,14 +1,33 @@
 use chrono::Local;
 use serenity::client::Context;
 use serenity::model::channel::Message;
-use serenity::model::guild::Guild;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 
-pub async fn local_message_logger(ctx: &Context, msg: &Message) {
+use crate::ParsedConfig;
+
+pub async fn local_logger(ctx: &Context, msg: &Message) {  
     if msg.author.bot {
         return;
     }
+
+    let config_hashmap = {
+        let data_read = ctx.data.read().await;
+        data_read
+            .get::<ParsedConfig>()
+            .expect("Expected Parsed Config In TypeMap.")
+            .clone()
+    };
+
+    let local_logger_enabled: bool;
+    {
+        local_logger_enabled = config_hashmap.lock().await.local_logger_enabled;
+    }
+
+    if !local_logger_enabled {
+        return ;
+    }
+
     download_attachments(&msg).await;
     log_message(&ctx, &msg).await;
 }

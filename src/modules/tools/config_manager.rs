@@ -25,6 +25,10 @@ fn config_parser(config: Config) -> ParsedConfig {
             .log_channel_enabled
             .parse::<bool>()
             .expect("Unable to parse log_channel_enabled")),
+        local_logger_enabled: (config
+            .local_logger_enabled
+            .parse::<bool>()
+            .expect("Unable to parse local_logger_enabled")),
         stalker_user_id: (config
             .stalker_user_id
             .parse::<u64>()
@@ -36,6 +40,6 @@ fn config_parser(config: Config) -> ParsedConfig {
         stalker_enabled: (config
             .stalker_enabled
             .parse::<bool>()
-            .expect("Unable to parse log_channel_enabled")),
+            .expect("Unable to parse stalker_enabled")),
     }
 }
