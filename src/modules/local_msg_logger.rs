@@ -1,6 +1,7 @@
 use chrono::Local;
 use serenity::client::Context;
 use serenity::model::channel::Message;
+use serenity::model::guild::Guild;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 
@@ -40,8 +41,14 @@ async fn log_message(ctx: &Context, msg: &Message) {
         Err(_) => "Unknown-Channel".to_string(),
     };
 
-    let guild_name = match msg.guild(&ctx.cache) {
-        Some(guild) => guild.name.to_string(),
+    let guild_name = match msg.guild_id {
+        Some(guild_id) => {
+            if let Ok(guild) = ctx.http.get_guild(guild_id.as_u64().clone()).await {
+                guild.name.to_string()
+            } else {
+                "Unknown-Guild".to_string()
+            }
+        }
         None => "Unknown-Guild".to_string(),
     };
 
@@ -55,7 +62,7 @@ async fn log_message(ctx: &Context, msg: &Message) {
 
     let formatted_message = format!("[{}][{}][{}] - {}", channel_name, author, time, content);
 
-    let directory = format!("log/[{}]{}.txt", date, guild_name);
+    let directory = format!("log/{} [{}].txt", guild_name, date);
 
     if let Ok(mut file) = OpenOptions::new()
         .create(true)
