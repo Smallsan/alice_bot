@@ -1,13 +1,14 @@
-use crate::MessageStorageContainer;
 use serenity::client::Context;
 use serenity::model::channel::Message;
+
+use crate::MessageStorageContainer;
 
 pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
     if msg.author.bot || msg.content.contains("!backtrack") {
         return;
     }
 
-    let channel_id = msg.channel_id.as_u64();
+    let channel_id: &u64 = msg.channel_id.as_u64();
 
     let msg_storage = {
         let data_read = ctx.data.read().await;
@@ -23,7 +24,7 @@ pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
         msg_storage_locked.insert(*channel_id, Vec::new());
     }
 
-    let mut formatted_msg = String::new();
+    let mut formatted_msg: String = String::new();
 
     if let Some(msg_vector) = msg_storage_locked.get_mut(channel_id) {
         if msg_vector.len() > 5 {
@@ -48,7 +49,7 @@ fn get_replied_msg(msg: &Message) -> String {
 }
 
 fn get_author_msg(msg: &Message) -> String {
-    let author_msg = format!(
+    let author_msg: String = format!(
         "{:?} Said: {:?} \n  ",
         msg.author.name.to_string().to_uppercase(),
         &msg.content

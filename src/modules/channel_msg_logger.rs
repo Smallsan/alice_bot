@@ -2,11 +2,10 @@ use serenity::client::Context;
 use serenity::model::channel::Message;
 use serenity::model::prelude::ChannelId;
 
+use super::formatters::log_embed_formatter::log_embed_formatter;
 use crate::ParsedConfig;
 
-use super::formatters::log_embed_formatter::log_embed_formatter;
-
-struct LogChannelConfig{
+struct LogChannelConfig {
     channel_id: ChannelId,
     enabled: bool,
 }
@@ -15,6 +14,28 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
     if msg.author.bot {
         return;
     }
+
+    let config: LogChannelConfig = fetch_config(&ctx).await;
+
+    if !config.enabled {
+        return;
+    }
+
+    let embed_vec: Vec<serenity::builder::CreateEmbed> = log_embed_formatter(ctx, msg).await;
+
+    match config
+        .channel_id
+        .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
+        .await
+    {
+        Ok(_) => {}
+        Err(e) => {
+            println!("Error sending log message: {:?}", e);
+        }
+    };
+}
+
+async fn fetch_config(ctx: &Context) -> LogChannelConfig {
     let config_hashmap = {
         let data_read = ctx.data.read().await;
         data_read
@@ -23,22 +44,10 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
             .clone()
     };
 
-    let log_channel_config : LogChannelConfig;
-    {
-        let config_hashmap_locked = config_hashmap.lock().await;
-        log_channel_config = LogChannelConfig{
-            channel_id: ChannelId(config_hashmap_locked.log_channel_id),
-            enabled: config_hashmap_locked.log_channel_enabled,
-        }
-    }
-    
-    if !log_channel_config.enabled {
-        return;
-    }
+    let config_hashmap_locked = config_hashmap.lock().await;
 
-    let embed_vec = log_embed_formatter(ctx, msg).await;
-
-    let _send_message = log_channel_config.channel_id
-        .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
-        .await;
+    return LogChannelConfig {
+        channel_id: ChannelId(config_hashmap_locked.log_channel_id),
+        enabled: config_hashmap_locked.log_channel_enabled,
+    };
 }

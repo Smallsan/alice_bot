@@ -1,20 +1,7 @@
-mod commands;
-mod modules;
-
-use crate::commands::admin_commands::*;
-use crate::commands::user_commands::*;
-
-use modules::channel_msg_logger::channel_msg_logger;
-use modules::local_msg_logger::local_logger;
-use modules::msg_stalker::msg_stalker;
-use modules::msg_storage_logger::msg_storage_logger;
-use modules::tools::config_manager::load_config;
-use modules::tools::create_directory::create_directory;
-use modules::tools::key_manager::get_key_from_json;
-
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
+use serenity::client::bridge::gateway::ShardId;
 
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -30,6 +17,20 @@ use serenity::model::event::ResumedEvent;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
 use tracing::error;
+
+mod commands;
+mod modules;
+
+use crate::commands::admin_commands::*;
+use crate::commands::user_commands::*;
+
+use modules::channel_msg_logger::channel_msg_logger;
+use modules::local_msg_logger::local_logger;
+use modules::msg_stalker::msg_stalker;
+use modules::msg_storage_logger::msg_storage_logger;
+use modules::tools::config_manager::load_config;
+use modules::tools::create_directory::create_directory;
+use modules::tools::key_manager::get_key_from_json;
 
 pub struct ShardManagerContainer;
 
@@ -78,7 +79,7 @@ pub struct Config {
 }
 
 #[group]
-#[commands(quit, bubble, backtrack)]
+#[commands(quit, restart, bubble, backtrack)]
 struct General;
 struct Handler;
 
@@ -88,8 +89,9 @@ impl EventHandler for Handler {
         println!("Connected as {}", ready.user.name);
     }
 
-    async fn resume(&self, _: Context, _: ResumedEvent) {
+    async fn resume(&self, ctx: Context, _: ResumedEvent) {
         println!("Resumed");
+        restart(&ctx).await;
     }
 
     async fn message(&self, ctx: Context, msg: Message) {
@@ -97,6 +99,22 @@ impl EventHandler for Handler {
         local_logger(&ctx, &msg).await;
         msg_storage_logger(&ctx, &msg).await;
         msg_stalker(&ctx, &msg).await;
+    }
+}
+
+async fn restart(ctx: &Context) {
+    let data = ctx.data.read().await;
+
+    if let Some(manager) = data.get::<ShardManagerContainer>() {
+
+        println!("Restarting!");
+
+        let mut locked_manager = manager.lock().await;
+
+        locked_manager.restart(ShardId(0)).await;
+    }
+    else {
+        println!("There was a problem getting the shard manager");
     }
 }
 

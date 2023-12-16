@@ -16,6 +16,7 @@ pub fn generate_bubble_wrap() -> String {
 
 fn random_position(grid: &mut Vec<&str>) {
     let mut rng = rand::thread_rng();
+    
     if let Some(i) = (0..grid.len()).choose(&mut rng) {
         grid[i] = "dud";
     }

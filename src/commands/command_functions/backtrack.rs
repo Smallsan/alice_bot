@@ -18,7 +18,6 @@ pub async fn get_backtrack(ctx: &Context, msg: &Message) -> CreateEmbed {
 
     let mut formatted_msg = String::new();
 
-    // Lock Block
     {
         let msg_storage_locked = msg_storage.lock().await;
 
