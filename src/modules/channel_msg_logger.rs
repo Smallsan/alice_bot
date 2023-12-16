@@ -11,7 +11,7 @@ struct LogChannelConfig {
 }
 
 pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot {
+    if msg.author.bot || !msg.sticker_items.is_empty(){
         return;
     }
 

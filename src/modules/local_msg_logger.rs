@@ -10,7 +10,7 @@ struct LocalLoggerConfig {
 }
 
 pub async fn local_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot {
+    if msg.author.bot || !msg.sticker_items.is_empty(){
         return;
     }
 

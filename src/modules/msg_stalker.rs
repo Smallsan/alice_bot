@@ -12,7 +12,7 @@ struct MessageStalkerConfig {
 }
 
 pub async fn msg_stalker(ctx: &Context, msg: &Message) {
-    if msg.author.bot {
+    if msg.author.bot || !msg.sticker_items.is_empty(){
         return;
     }
 

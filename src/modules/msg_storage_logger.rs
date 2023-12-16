@@ -4,7 +4,7 @@ use serenity::model::channel::Message;
 use crate::MessageStorageContainer;
 
 pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot || msg.content.contains("!backtrack") {
+    if msg.author.bot || msg.content.contains("!backtrack") || !msg.sticker_items.is_empty(){
         return;
     }
 
