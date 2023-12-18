@@ -106,14 +106,12 @@ async fn restart(ctx: &Context) {
     let data = ctx.data.read().await;
 
     if let Some(manager) = data.get::<ShardManagerContainer>() {
-
         println!("Restarting!");
 
         let mut locked_manager = manager.lock().await;
 
         locked_manager.restart(ShardId(0)).await;
-    }
-    else {
+    } else {
         println!("There was a problem getting the shard manager");
     }
 }

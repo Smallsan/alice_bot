@@ -13,7 +13,7 @@ struct LogChannelConfig {
 }
 
 pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot || !msg.sticker_items.is_empty(){
+    if msg.author.bot || !msg.sticker_items.is_empty() {
         return;
     }
 
@@ -25,15 +25,19 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
 
     let embed_vec: Vec<serenity::builder::CreateEmbed> = log_embed_formatter(ctx, msg).await;
 
-    if let Err(err) = send_message(&ctx, config.channel_id, embed_vec).await{
+    if let Err(err) = send_message(&ctx, config.channel_id, embed_vec).await {
         eprintln!("Error sending log message: {:?}", err);
     }
-
 }
 
-async fn send_message(ctx: &Context, channel_id: ChannelId, embed_vec: Vec<CreateEmbed>) -> Result<(), Error> {
-    channel_id.send_message(&ctx.http, |message| message.add_embeds(embed_vec))
-    .await?;
+async fn send_message(
+    ctx: &Context,
+    channel_id: ChannelId,
+    embed_vec: Vec<CreateEmbed>,
+) -> Result<(), Error> {
+    channel_id
+        .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
+        .await?;
     return Ok(());
 }
 

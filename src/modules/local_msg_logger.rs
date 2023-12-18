@@ -10,7 +10,7 @@ struct LocalLoggerConfig {
 }
 
 pub async fn local_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot || !msg.sticker_items.is_empty(){
+    if msg.author.bot || !msg.sticker_items.is_empty() {
         return;
     }
 
@@ -26,16 +26,19 @@ pub async fn local_logger(ctx: &Context, msg: &Message) {
 
 async fn download_attachments(msg: &Message) {
     if msg.attachments.is_empty() {
-        return
+        return;
     }
     for attachment in &msg.attachments {
         if let Ok(attachment_raw) = attachment.download().await {
             let file_directory: String = format!("log/attachments/{}", attachment.filename);
 
-            if let Err(err) = File::create(&file_directory)
-                .and_then(|mut file| file.write_all(&attachment_raw))
+            if let Err(err) =
+                File::create(&file_directory).and_then(|mut file| file.write_all(&attachment_raw))
             {
-                eprintln!("Failed to create file: {:?}, Error: {:?}", &file_directory, err);
+                eprintln!(
+                    "Failed to create file: {:?}, Error: {:?}",
+                    &file_directory, err
+                );
             }
         }
     }
@@ -44,12 +47,16 @@ async fn download_attachments(msg: &Message) {
 async fn log_message(ctx: &Context, msg: &Message) {
     let author: &String = &msg.author.name;
 
-    let channel_name: String = msg
-    .channel(&ctx.http)
-    .await
-    .map_or_else(|_| "Unknown-Channel".to_string(), |channel| {
-        channel.guild().map_or("Unknown-Channel".to_string(), |guild| guild.name.to_string())
-    });
+    let channel_name: String = msg.channel(&ctx.http).await.map_or_else(
+        |_| "Unknown-Channel".to_string(),
+        |channel| {
+            channel
+                .guild()
+                .map_or("Unknown-Channel".to_string(), |guild| {
+                    guild.name.to_string()
+                })
+        },
+    );
 
     let guild_name: String = match msg.guild_id {
         Some(guild_id) => {

@@ -4,7 +4,7 @@ use serenity::model::channel::Message;
 use crate::MessageStorageContainer;
 
 pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
-    if msg.author.bot || msg.content.contains("!backtrack") || !msg.sticker_items.is_empty(){
+    if msg.author.bot || msg.content.contains("!backtrack") || !msg.sticker_items.is_empty() {
         return;
     }
 
@@ -38,7 +38,7 @@ fn fetch_formatted_message(msg: &Message) -> String {
     let replied_msg = fetch_replied_msg(&msg);
     let author_msg = fetch_author_msg(&msg);
 
-    return format!("┌── {}\n  {}", replied_msg, author_msg)
+    return format!("┌── {}\n  {}", replied_msg, author_msg);
 }
 
 fn fetch_replied_msg(msg: &Message) -> String {
@@ -47,9 +47,9 @@ fn fetch_replied_msg(msg: &Message) -> String {
             "┌── {} Said: {}\n  ",
             replied_msg_box.author.name.to_uppercase(),
             &replied_msg_box.content
-        )
+        );
     } else {
-        return String::new()
+        return String::new();
     }
 }
 
@@ -58,5 +58,5 @@ fn fetch_author_msg(msg: &Message) -> String {
         "{} Said: {}\n  ",
         msg.author.name.to_uppercase(),
         &msg.content
-    )
+    );
 }
