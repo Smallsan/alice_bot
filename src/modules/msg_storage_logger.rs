@@ -24,36 +24,39 @@ pub async fn msg_storage_logger(ctx: &Context, msg: &Message) {
         msg_storage_locked.insert(*channel_id, Vec::new());
     }
 
-    let mut formatted_msg: String = String::new();
+    let formatted_msg = fetch_formatted_message(&msg);
 
     if let Some(msg_vector) = msg_storage_locked.get_mut(channel_id) {
         if msg_vector.len() > 5 {
             msg_vector.remove(0);
         }
-        formatted_msg += &get_replied_msg(msg);
-        formatted_msg += &get_author_msg(msg);
         msg_vector.push(formatted_msg);
     }
 }
 
-fn get_replied_msg(msg: &Message) -> String {
-    if let Some(replied_msg_box) = &msg.referenced_message {
-        return format!(
-            "┌── {:?} Said: {:?} \n  ",
-            replied_msg_box.author.name.to_uppercase(),
-            &replied_msg_box.content
-        );
-    }
+fn fetch_formatted_message(msg: &Message) -> String {
+    let replied_msg = fetch_replied_msg(&msg);
+    let author_msg = fetch_author_msg(&msg);
 
-    return String::new();
+    return format!("┌── {}\n  {}", replied_msg, author_msg)
 }
 
-fn get_author_msg(msg: &Message) -> String {
-    let author_msg: String = format!(
-        "{:?} Said: {:?} \n  ",
-        msg.author.name.to_string().to_uppercase(),
-        &msg.content
-    );
+fn fetch_replied_msg(msg: &Message) -> String {
+    if let Some(replied_msg_box) = &msg.referenced_message {
+        return format!(
+            "┌── {} Said: {}\n  ",
+            replied_msg_box.author.name.to_uppercase(),
+            &replied_msg_box.content
+        )
+    } else {
+        return String::new()
+    }
+}
 
-    return author_msg;
+fn fetch_author_msg(msg: &Message) -> String {
+    return format!(
+        "{} Said: {}\n  ",
+        msg.author.name.to_uppercase(),
+        &msg.content
+    )
 }

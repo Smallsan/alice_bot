@@ -1,3 +1,5 @@
+use mini_redis::Error;
+use serenity::builder::CreateEmbed;
 use serenity::client::Context;
 use serenity::model::channel::Message;
 use serenity::model::prelude::ChannelId;
@@ -23,16 +25,16 @@ pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
 
     let embed_vec: Vec<serenity::builder::CreateEmbed> = log_embed_formatter(ctx, msg).await;
 
-    match config
-        .channel_id
-        .send_message(&ctx.http, |message| message.add_embeds(embed_vec))
-        .await
-    {
-        Ok(_) => {}
-        Err(e) => {
-            println!("Error sending log message: {:?}", e);
-        }
-    };
+    if let Err(err) = send_message(&ctx, config.channel_id, embed_vec).await{
+        eprintln!("Error sending log message: {:?}", err);
+    }
+
+}
+
+async fn send_message(ctx: &Context, channel_id: ChannelId, embed_vec: Vec<CreateEmbed>) -> Result<(), Error> {
+    channel_id.send_message(&ctx.http, |message| message.add_embeds(embed_vec))
+    .await?;
+    return Ok(());
 }
 
 async fn fetch_config(ctx: &Context) -> LogChannelConfig {
