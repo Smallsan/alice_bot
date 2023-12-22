@@ -111,6 +111,7 @@ async fn restart(ctx: &Context) {
         let mut locked_manager = manager.lock().await;
 
         locked_manager.restart(ShardId(0)).await;
+        locked_manager.restart(ShardId(1)).await;
     } else {
         println!("There was a problem getting the shard manager");
     }
