@@ -91,7 +91,6 @@ impl EventHandler for Handler {
 
     async fn resume(&self, ctx: Context, _: ResumedEvent) {
         println!("Resumed");
-        restart(&ctx).await;
     }
 
     async fn message(&self, ctx: Context, msg: Message) {
@@ -99,21 +98,6 @@ impl EventHandler for Handler {
         local_logger(&ctx, &msg).await;
         msg_storage_logger(&ctx, &msg).await;
         msg_stalker(&ctx, &msg).await;
-    }
-}
-
-async fn restart(ctx: &Context) {
-    let data = ctx.data.read().await;
-
-    if let Some(manager) = data.get::<ShardManagerContainer>() {
-        println!("Restarting!");
-
-        let mut locked_manager = manager.lock().await;
-
-        locked_manager.restart(ShardId(0)).await;
-        locked_manager.restart(ShardId(1)).await;
-    } else {
-        println!("There was a problem getting the shard manager");
     }
 }
 
