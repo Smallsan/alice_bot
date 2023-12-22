@@ -1,7 +1,6 @@
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
-use serenity::client::bridge::gateway::ShardId;
 
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -89,7 +88,7 @@ impl EventHandler for Handler {
         println!("Connected as {}", ready.user.name);
     }
 
-    async fn resume(&self, ctx: Context, _: ResumedEvent) {
+    async fn resume(&self, _ctx: Context, _: ResumedEvent) {
         println!("Resumed");
     }
 
