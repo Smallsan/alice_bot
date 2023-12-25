@@ -1,6 +1,6 @@
 use std::{fs::File, io::Read};
 
-use super::create_directory::create_directory;
+use crate::modules::tools::create_directory::create_directory;
 use crate::Keys;
 
 /// Gets The Discord Bot Token From The Config File.

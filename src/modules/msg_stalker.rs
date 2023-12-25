@@ -4,7 +4,7 @@ use serenity::client::Context;
 use serenity::model::channel::{Message, PrivateChannel};
 use serenity::model::id::UserId;
 
-use super::formatters::log_embed_formatter::log_embed_formatter;
+use crate::modules::formatters::log_embed_formatter::log_embed_formatter;
 use crate::ParsedConfig;
 
 struct MessageStalkerConfig {
