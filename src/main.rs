@@ -1,6 +1,7 @@
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
+use serenity::model::Timestamp;
 
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -30,6 +31,16 @@ use modules::msg_storage_logger::msg_storage_logger;
 use modules::tools::config_manager::load_config;
 use modules::tools::create_directory::create_directory;
 use modules::tools::key_manager::get_key_from_json;
+
+pub struct UserCooldowns {
+    user_cooldowns: HashMap<u64, Timestamp>
+    
+}
+pub struct CommandCooldownContainer {
+    command_cooldowns: HashMap<u64, UserCooldowns>
+}
+
+
 
 pub struct ShardManagerContainer;
 

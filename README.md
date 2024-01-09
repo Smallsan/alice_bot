@@ -1,65 +1,65 @@
-# Alice Bot (Still Work In Progress!!) (Like Seriously)
+# Alice Bot (Work In Progress - Seriously!)
 
-A MultiPurpose Discord Bot Coded In Rust.
+Alice Bot is a versatile Discord bot developed in Rust.
 
 ## Admin Features
 
-- [x] Stalker Mode - Have you ever wanted to stalk a special someone in your discord server? You just need their ```UserID``` and you're good to go.
+- [x] Stalker Mode: Easily stalk a specific user in your Discord server using their `UserID`.
   
-- [x] Channel Event Logger - It just logs events that happen inside your servers into a text channel, Just provide a ```ChannelID```. *(It's Kinda Like Dyno)*
+- [x] Channel Event Logger: Logs server events into a designated text channel using a provided `ChannelID` (similar to Dyno).
   
-- [x] Local Event Logger - It's just like the Channel Event Logger but instead of saving it in a channel, It saves it locally in a text file. *(One Text File Per Day Dear Lord...)*
+- [x] Local Event Logger: Saves server events in a text file locally, one file per day (a bit excessive, right?).
   
-- [x] Attachment Downloader - It saves all the attachments that anyone sends in the server to your local drive. *(It Doesn't Filter Out NSFW...)*
+- [x] Attachment Downloader: Saves all server attachments to your local drive (NSFW content included).
   
-- [ ] Anti NSFW Filter - Uses a trained AI model to detect and auto delete explicit images sent in your server's non NSFW channels.
+- [ ] Anti NSFW Filter: Aims to auto-delete explicit images in non-NSFW channels using a trained AI model.
   
-- [ ] Record Everything Everywhere - It logs every single message sent in every single channel in the server, It saves it in separated text files named after the channel names.
+- [ ] Record Everything Everywhere: Logs every message in every channel, saving them in separate text files by channel name.
   
-- [ ] Record Everything Here - Records every single message but in just a specific channel.
+- [ ] Record Everything Here: Records every message but in a specific channel.
 
 ## User Features
 
-- [x] Bubble Wrap - It generates that generic spoiler bubble wrap message in discord.
+- [x] Bubble Wrap: Generates a generic spoiler bubble wrap message in Discord.
   
-- [x] Backtrack - It shows recently sent messages in the channel.
+- [x] Backtrack: Displays recently sent messages in the channel.
 
-- [ ] Reputation Tracker - It allows you to have a reputation system in your server, And be able to display that.
+- [ ] Reputation Tracker: Sets up a reputation system in your server and enables display.
 
-- [ ] Booru Search - It allows you to fetch images from either danbooru or safebooru.
-  
+- [ ] Booru Search: Fetches images from either danbooru or safebooru.
+
 ## How To Run
 
-1. Create a `keys.json` inside the `config folder`.
+1. Create a `keys.json` file inside the `config` folder.
 
-2. Place your discord api key inside the `keys.json`.
-
-    ```json
-    {
-        "discord_api_key": "Your discord api key",
-    }
-    ```
-
-3. Configure the `config.json` inside the `config folder`.
+2. Place your Discord API key inside the `keys.json`:
 
     ```json
     {
-        "log_channel_id": "Channel_Id of where you want logs to be sent",
-        "msg_stalker_user_id": "User_Id of the one you want to stalk",
-        "msg_stalker_receiver_id": "User_Id of the receiver of the stalk messages"
+        "discord_api_key": "Your Discord API key"
     }
     ```
 
-4. Either run the project by typing `cargo run --release` in the terminal or compile it and run it the same way.
+3. Configure the `config.json` inside the `config` folder:
+
+    ```json
+    {
+        "log_channel_id": "Channel ID for logs",
+        "msg_stalker_user_id": "UserID to stalk",
+        "msg_stalker_receiver_id": "UserID of the recipient for stalk messages"
+    }
+    ```
+
+4. Run the project by typing `cargo run --release` in the terminal or compile and run it similarly.
 
 ## Common Problems
 
-### Message Stalker Isn't Sending Me Messages
+### Message Stalker Isn't Sending Messages
 
-- Make sure you allow ```Direct messages from server members``` in your discord account.
+- Ensure you've allowed `Direct messages from server members` in your Discord account settings.
   
-- Be sure to check if you correctly set the values ```msg_stalker_user_id``` and ```msg_stalker_receiver_id``` in the config file.
+- Double-check the accuracy of values set for `msg_stalker_user_id` and `msg_stalker_receiver_id` in the config file.
 
 ## Contribution
 
-- Be sure to format the code with ```cargo fmt``` before creating a pull request.
+- Prior to creating a pull request, ensure code formatting with `cargo fmt`.
