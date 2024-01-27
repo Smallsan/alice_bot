@@ -24,7 +24,7 @@ Alice Bot is a versatile Discord bot developed in Rust.
   
 - [x] Backtrack: Displays recently sent messages in the channel.
 
-- [ ] Reputation Tracker: Sets up a reputation system in your server and enables display.
+- [x] Reputation Tracker: Sets up a reputation system in your server and enables display.
 
 - [ ] Booru Search: Fetches images from either danbooru or safebooru.
 
