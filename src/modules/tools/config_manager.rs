@@ -1,7 +1,7 @@
 use std::{fs::File, io::Read};
 
-use crate::{Config, ParsedConfig};
 use crate::modules::tools::create_directory::create_directory;
+use crate::{Config, ParsedConfig};
 
 pub fn load_config() -> ParsedConfig {
     create_directory("config/config.json");

@@ -44,3 +44,4 @@ async fn restart(ctx: &Context, msg: &Message) -> CommandResult {
     }
     Ok(())
 }
+

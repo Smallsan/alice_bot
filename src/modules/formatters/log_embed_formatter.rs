@@ -19,11 +19,16 @@ pub async fn log_embed_formatter(ctx: &Context, msg: &Message) -> Vec<CreateEmbe
 
     let content = msg.content.to_owned();
 
-    let guild_id = msg.guild_id.map_or_else(|| "Unknown-Guild".to_owned(), |id| id.to_string());
+    let guild_id = msg
+        .guild_id
+        .map_or_else(|| "Unknown-Guild".to_owned(), |id| id.to_string());
 
     let channel_id = msg.channel_id.to_string();
 
-    let channel_name = msg.channel(&ctx.http).await.map_or_else(|_| "Unknown-Channel".to_owned(), |channel| channel.to_string());
+    let channel_name = msg.channel(&ctx.http).await.map_or_else(
+        |_| "Unknown-Channel".to_owned(),
+        |channel| channel.to_string(),
+    );
 
     let id = msg.id.to_string();
 

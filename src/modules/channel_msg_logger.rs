@@ -5,17 +5,25 @@ use serenity::model::channel::Message;
 use serenity::model::prelude::ChannelId;
 
 use crate::modules::formatters::log_embed_formatter::log_embed_formatter;
-use crate::ParsedConfig;
+use crate::{LogMutex, ParsedConfig};
 
 struct LogChannelConfig {
     channel_id: ChannelId,
     enabled: bool,
 }
 
+
 pub async fn channel_msg_logger(ctx: &Context, msg: &Message) {
     if msg.author.bot || !msg.sticker_items.is_empty() {
         return;
     }
+    
+    let log_mutex = {
+        let data_read = ctx.data.read().await;
+        data_read.get::<LogMutex>().expect("Expected LogMutex in TypeMap.").clone()
+    };
+
+    let _guard = log_mutex.lock();
 
     let config: LogChannelConfig = fetch_config(&ctx).await;
 

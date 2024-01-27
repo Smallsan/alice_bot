@@ -40,7 +40,11 @@ pub struct CommandCooldownContainer {
     command_cooldowns: HashMap<u64, UserCooldowns>
 }
 
+pub struct LogMutex;
 
+impl TypeMapKey for LogMutex {
+    type Value = Arc<Mutex<()>>;
+}
 
 pub struct ShardManagerContainer;
 
@@ -89,7 +93,7 @@ pub struct Config {
 }
 
 #[group]
-#[commands(quit, restart, bubble, backtrack)]
+#[commands(quit, restart, bubble, backtrack, halal, haram, rep)]
 struct General;
 struct Handler;
 
@@ -113,6 +117,7 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
+
     let database_connection = connect_database().await;
 
     tracing_subscriber::fmt::init();
@@ -156,6 +161,7 @@ async fn main() {
         data.insert::<MessageStorageContainer>(Arc::new(Mutex::new(HashMap::new())));
         data.insert::<DatabaseConnectionContainer>(Arc::new(database_connection.into()));
         data.insert::<ParsedConfig>(Arc::new(load_config().into()));
+        data.insert::<LogMutex>(Arc::new(Mutex::new(())));
     }
 
     let shard_manager = client.shard_manager.clone();
