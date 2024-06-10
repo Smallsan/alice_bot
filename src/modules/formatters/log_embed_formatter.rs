@@ -1,6 +1,6 @@
 use serde_json::Value;
 use serenity::builder::{CreateEmbed, CreateEmbedAuthor};
-use serenity::model::channel::{Attachment, Message};
+use serenity::model::channel::Message;
 use serenity::{client::Context, utils::Colour};
 use std::collections::HashMap;
 
