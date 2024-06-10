@@ -1,13 +1,17 @@
-use std::{fs::File, io::Read};
+use std::fs::{self, File};
+use std::io::prelude::*;
+use std::path::Path;
 
-use crate::modules::tools::create_directory::create_directory;
 use crate::Keys;
 
-/// Gets The Discord Bot Token From The Config File.
 pub fn get_key_from_json() -> Keys {
-    create_directory("config/keys.json");
+    let path = Path::new("config");
+    if !path.exists() {
+        fs::create_dir_all(&path).expect("Failed to create directory");
+    }
 
-    let mut key_file = File::open("config/keys.json").expect("Unable to find keys.json");
+    let file_path = path.join("keys.json");
+    let mut key_file = File::open(&file_path).unwrap_or_else(|_| File::create(&file_path).expect("Failed to create file"));
 
     let mut contents = String::new();
     key_file

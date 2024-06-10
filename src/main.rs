@@ -1,7 +1,5 @@
-use sea_orm::Database;
-use sea_orm::DatabaseConnection;
+
 use serde::{Deserialize, Serialize};
-use serenity::model::Timestamp;
 
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -32,13 +30,6 @@ use modules::tools::config_manager::load_config;
 use modules::tools::create_directory::create_directory;
 use modules::tools::key_manager::get_key_from_json;
 
-pub struct UserCooldowns {
-    user_cooldowns: HashMap<u64, Timestamp>
-    
-}
-pub struct CommandCooldownContainer {
-    command_cooldowns: HashMap<u64, UserCooldowns>
-}
 
 pub struct LogMutex;
 
@@ -56,12 +47,6 @@ pub struct MessageStorageContainer;
 
 impl TypeMapKey for MessageStorageContainer {
     type Value = Arc<Mutex<HashMap<u64, Vec<String>>>>;
-}
-
-pub struct DatabaseConnectionContainer;
-
-impl TypeMapKey for DatabaseConnectionContainer {
-    type Value = Arc<Mutex<DatabaseConnection>>;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -82,18 +67,10 @@ impl TypeMapKey for ParsedConfig {
     type Value = Arc<Mutex<ParsedConfig>>;
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Config {
-    log_channel_id: String,
-    log_channel_enabled: String,
-    local_logger_enabled: String,
-    stalker_user_id: String,
-    stalker_receiver_id: String,
-    stalker_enabled: String,
-}
+
 
 #[group]
-#[commands(quit, restart, bubble, backtrack, halal, haram, rep)]
+#[commands(quit, restart, bubble, backtrack)]
 struct General;
 struct Handler;
 
@@ -117,8 +94,6 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
-
-    let database_connection = connect_database().await;
 
     tracing_subscriber::fmt::init();
 
@@ -159,7 +134,6 @@ async fn main() {
         let mut data = client.data.write().await;
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
         data.insert::<MessageStorageContainer>(Arc::new(Mutex::new(HashMap::new())));
-        data.insert::<DatabaseConnectionContainer>(Arc::new(database_connection.into()));
         data.insert::<ParsedConfig>(Arc::new(load_config().into()));
         data.insert::<LogMutex>(Arc::new(Mutex::new(())));
     }
@@ -176,14 +150,4 @@ async fn main() {
     if let Err(why) = client.start().await {
         error!("Client error: {:?}", why);
     }
-}
-
-/// Sets Up a Database Connection.
-async fn connect_database() -> DatabaseConnection {
-    create_directory("database");
-    let database: DatabaseConnection =
-        Database::connect("sqlite://database/database.sqlite?mode=rwc")
-            .await
-            .expect("Unable to connect to database");
-    return database;
 }
